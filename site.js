@@ -34,25 +34,47 @@
     document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mm.classList.contains('open')){mmSet(false);mmb.focus();}});
     mm.addEventListener('focusout',function(e){if(!mmw.contains(e.relatedTarget))mmSet(false);});
   }
-  // enquiry form: live only on bigredbox.co.uk (posts to our own hosting)
+  // enquiry form: live only on bigredbox.co.uk. Posts JSON to the site's existing /contact.php (same route and recipient as the previous site).
+  var live=/(^|\.)bigredbox\.co\.uk$/i.test(location.hostname);
   var f=document.getElementById('enquiry');
   if(f){
-    var live=/(^|\.)bigredbox\.co\.uk$/i.test(location.hostname);
-    var st=document.getElementById('form-status'),ts=document.getElementById('ts');
-    if(ts)ts.value=String(Date.now());
+    var st=document.getElementById('form-status');
     if(!live){var n=document.createElement('p');n.className='staging-note';n.textContent='Preview: this form goes live on bigredbox.co.uk. Until then, email hello@bigredbox.co.uk.';f.insertBefore(n,f.firstChild);}
     f.addEventListener('submit',function(e){
       e.preventDefault();
       var bad=null;
-      ['fullname','email','message'].forEach(function(k){var el=f.elements[k];var ok=el.value.trim()!==''&&(k!=='email'||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()));el.setAttribute('aria-invalid',ok?'false':'true');if(!ok&&!bad)bad=el;});
+      ['first_name','last_name','email','message'].forEach(function(k){var el=f.elements[k];var v=el.value.trim();var ok=v!==''&&(k!=='email'||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))&&(k!=='message'||v.length>=3);el.setAttribute('aria-invalid',ok?'false':'true');if(!ok&&!bad)bad=el;});
       if(bad){st.className='form-status err';st.textContent='Please add your name, a valid email and a short message.';bad.focus();return;}
       if(!live){st.className='form-status';st.textContent='This is the preview site, so nothing was sent. On bigredbox.co.uk this goes straight to our inbox.';return;}
+      var data={};new FormData(f).forEach(function(v,k){data[k]=String(v).trim();});
       var btn=f.querySelector('button[type=submit]');btn.disabled=true;st.className='form-status';st.textContent='Sending…';
-      fetch(f.getAttribute('action'),{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'},credentials:'same-origin'})
-        .then(function(r){return r.json().catch(function(){return {ok:false};}).then(function(j){if(!r.ok||!j.ok)throw 0;});})
-        .then(function(){f.reset();st.className='form-status ok';st.textContent='Thank you. We’ll be in touch within one working day.';})
-        .catch(function(){st.className='form-status err';st.textContent='Something went wrong. Please email hello@bigredbox.co.uk instead.';})
+      fetch('/contact.php',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data),credentials:'same-origin'})
+        .then(function(r){return r.json().catch(function(){return {ok:false};}).then(function(j){if(!r.ok||!j.ok)throw new Error(j.msg||'');});})
+        .then(function(){f.reset();st.className='form-status ok';st.textContent='Thank you. Your enquiry has been sent to bigredbox.';})
+        .catch(function(err){st.className='form-status err';st.textContent=((err&&err.message)?err.message+' ':'Something went wrong. ')+'You can also email hello@bigredbox.co.uk.';})
         .then(function(){btn.disabled=false;});
     });
+  }
+  // insights: on bigredbox.co.uk, add posts published on the blog engine since this build (read from the site's existing /insights-feed.php)
+  var cards=document.querySelector('.cards[data-feed]');
+  if(live&&cards){
+    var known={};[].forEach.call(document.querySelectorAll('a[data-slug]'),function(a){known[a.getAttribute('data-slug')]=1;});
+    fetch('/insights-feed.php?page=1',{headers:{'Accept':'application/json'},credentials:'same-origin'})
+      .then(function(r){if(!r.ok)throw 0;return r.json();})
+      .then(function(d){
+        if(!d||!Array.isArray(d.posts))return;
+        var fresh=d.posts.filter(function(p){var s=String(p.url||'').replace(/\/+$/,'').split('/').pop();return p.title&&p.url&&/^https:\/\/(blog\.)?bigredbox\.co\.uk\//.test(p.url)&&!known[s];});
+        if(!fresh.length)return;
+        var t=function(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
+        var els=fresh.map(function(p){
+          var a=t('a','card');a.href=p.url;
+          if(p.image&&/^\/[^\/]/.test(p.image)){var w=t('div','img'),im=document.createElement('img');im.src=p.image;im.alt='';im.loading='lazy';im.width=1200;im.height=675;w.appendChild(im);a.appendChild(w);}
+          var m=t('div','meta');m.appendChild(t('span','t',p.category||'Insight'));m.appendChild(t('span','',p.date||''));a.appendChild(m);
+          a.appendChild(t('h3','',p.title));if(p.excerpt)a.appendChild(t('p','',p.excerpt));return a;});
+        var max=parseInt(cards.getAttribute('data-feed'),10)||0;
+        els.reverse().forEach(function(el){cards.insertBefore(el,cards.firstChild);});
+        if(max)while(cards.children.length>max)cards.removeChild(cards.lastChild);
+        var lt=document.querySelector('.feature .t');if(lt)lt.textContent=lt.textContent.replace(/^Latest · /,'');
+      }).catch(function(){});
   }
 })();

@@ -15,9 +15,9 @@
 <meta name="theme-color" content="#0a0a0a">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/inter.woff2" as="font" type="font/woff2" crossorigin>
-<script src="theme.js?v=a063ba7f"></script>
-<link rel="stylesheet" href="styles.css?v=a063ba7f">
-<script src="site.js?v=a063ba7f" defer></script>
+<script src="theme.js?v=d88d70e2"></script>
+<link rel="stylesheet" href="styles.css?v=d88d70e2">
+<script src="site.js?v=d88d70e2" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -32,12 +32,12 @@
 
 <section class="page-hero wrap"><p class="eyebrow">Contact</p><h1 class="display">What needs to<br><span class="dim">be clearer?</span></h1><p class="lead">Tell us what’s on your mind. We’ll start with a straightforward conversation.</p></section>
 <section class="wrap rule"><div class="contact-grid">
-<form class="form" id="enquiry" action="api/contact.php" method="post" novalidate>
-<div class="row2"><label><span>Name</span><input name="fullname" autocomplete="name" required maxlength="120"></label><label><span>Work email</span><input name="email" type="email" autocomplete="email" required maxlength="200"></label></div>
-<div class="row2"><label><span>Organisation <em>optional</em></span><input name="org" autocomplete="organization" maxlength="160"></label><label><span>Interested in</span><select name="topic"><option value="">Choose one</option><option>AI security</option><option>Security leadership & fCISO</option><option>Penetration testing & VAPT</option><option>Red teaming</option><option>Cyber security foundations</option><option>brb.scenario exercises</option><option>Something else</option></select></label></div>
-<label><span>How can we help?</span><textarea name="message" rows="6" required maxlength="5000"></textarea></label>
+<form class="form" id="enquiry" action="/contact.php" method="post" novalidate>
+<div class="row2"><label><span>First name</span><input name="first_name" autocomplete="given-name" required maxlength="100"></label><label><span>Last name</span><input name="last_name" autocomplete="family-name" required maxlength="100"></label></div>
+<div class="row2"><label><span>Work email</span><input name="email" type="email" autocomplete="email" required maxlength="254"></label><label><span>Organisation <em>optional</em></span><input name="organisation" autocomplete="organization" maxlength="150"></label></div>
+<label><span>Interested in</span><select name="service"><option value="">Not sure yet</option><option value="AI security">AI security</option><option value="Security leadership & fCISO">Security leadership & fCISO</option><option value="Penetration testing">Penetration testing & VAPT</option><option value="Red teaming">Red teaming</option><option value="Cyber security assessment">Cyber security foundations</option><option value="Scenario">brb.scenario exercises</option><option value="Something else">Something else</option></select></label>
+<label><span>How can we help?</span><textarea name="message" rows="6" required minlength="3" maxlength="2000"></textarea></label>
 <label class="hp" aria-hidden="true"><span>Leave this empty</span><input name="website" tabindex="-1" autocomplete="off"></label>
-<input type="hidden" name="ts" id="ts">
 <div class="form-foot"><button class="btn btn-primary" type="submit">Send enquiry <span class="arrow">→</span></button><p class="fine">We use your details only to reply to your enquiry. <a href="privacy.html">Privacy notice</a></p></div>
 <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
 </form>
