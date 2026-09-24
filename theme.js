@@ -1,0 +1,1 @@
+(function(){var d=document.documentElement;try{var t=localStorage.getItem('brb-theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t);}catch(e){}d.classList.remove('no-js');if(/[?&]still/.test(location.search))d.classList.add('still');})();
