@@ -365,3 +365,7 @@ figcaption{font-size:13px;color:var(--faint);margin-top:14px}
 .contact-side p{margin:0;color:var(--muted);font-size:15.5px}
 .contact-side a{color:var(--text);border-bottom:1px solid var(--line)}
 .maillink{font-size:19px;font-weight:600;letter-spacing:-.015em}
+.team{grid-template-columns:repeat(2,minmax(0,300px));gap:48px}
+@media (max-width:640px){.team{grid-template-columns:minmax(0,300px)}}
+@media (max-width:640px){.netbox{aspect-ratio:auto;height:88px;margin-bottom:18px}.netbox span{font-size:36px}}
+.brands-about{margin-top:0;border-top:0;padding-top:0}
