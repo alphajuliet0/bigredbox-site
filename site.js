@@ -39,6 +39,9 @@
   var f=document.getElementById('enquiry');
   if(f){
     var st=document.getElementById('form-status');
+    var requestedService=new URLSearchParams(location.search).get('service');
+    var serviceSelect=f.elements.service;
+    if(requestedService&&serviceSelect&&[].some.call(serviceSelect.options,function(o){return o.value===requestedService;}))serviceSelect.value=requestedService;
     if(!live){var n=document.createElement('p');n.className='staging-note';n.textContent='Preview: this form goes live on bigredbox.co.uk. Until then, email hello@bigredbox.co.uk.';f.insertBefore(n,f.firstChild);}
     f.addEventListener('submit',function(e){
       e.preventDefault();
