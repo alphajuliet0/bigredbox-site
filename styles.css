@@ -157,13 +157,13 @@ a:hover .arrow{transform:translateX(3px)}
 @media (max-width:860px){.feature{grid-template-columns:1fr}}
 
 /* founder */
-.founder{display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:clamp(36px,7vw,110px);align-items:center}
+.founder{display:grid;grid-template-columns:minmax(200px,300px) 1fr;gap:clamp(36px,7vw,110px);align-items:center}
 .founder img{border-radius:20px;aspect-ratio:4/5;object-fit:cover;width:100%;filter:grayscale(1) contrast(1.05)}
 .founder blockquote{margin:0;font-size:clamp(1.5rem,2.9vw,2.35rem);line-height:1.25;letter-spacing:-.03em;font-weight:500}
 .founder blockquote:before{content:"";display:block;width:36px;height:2px;background:var(--red);margin-bottom:30px}
 .founder .who{margin:28px 0 30px;color:var(--muted);font-size:15px}
 .founder .who strong{color:var(--text);font-weight:600}
-@media (max-width:760px){.founder{grid-template-columns:1fr}.founder img{max-width:300px}}
+@media (max-width:760px){.founder{grid-template-columns:1fr}.founder img{max-width:240px}}
 
 /* closing */
 .closing{text-align:center;padding-top:clamp(100px,14vw,190px);padding-bottom:clamp(100px,14vw,190px)}
